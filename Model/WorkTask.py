@@ -5,6 +5,7 @@ class WorkTask(Task):
         super().__init__(title, description, due_date)
         self.type = "Work"
 
+    # Method to convert the task to a dictionary
     def to_dict(self):
         data = super().to_dict()
         data['type'] = self.type 
@@ -12,3 +13,5 @@ class WorkTask(Task):
 
 def createWorkTask(title, description, due_date):
     return WorkTask(title, description, due_date)
+
+

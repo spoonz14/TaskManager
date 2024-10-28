@@ -26,9 +26,11 @@ class Task:
         self._description = description
         self._due_date = due_date
 
+    # STR method
     def __str__(self):
         return f'Task(title={self._title}, description={self._description}, due_date={self._due_date})'
 
+    # Method to convert the task object to a dictionary
     def to_dict(self):
         return {
             'title': self._title,
@@ -36,6 +38,8 @@ class Task:
             'due_date': self._due_date
         }
 
+# Also used this file as the main Task Controller
+# Function to create a task
 def createTask(title, description, due_date):
     task = Task(title, description, due_date)
     return task
