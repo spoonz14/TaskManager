@@ -42,13 +42,46 @@ def createTask(title, description, due_date):
 
 def readTasks():
     tasks = collection.find({})
-    list_of_tasks = [{k: v for k, v in task.items() if k != '_id'} for task in tasks]
-    st.table(list_of_tasks)
+    list_of_tasks = []
+
+    # Loop through the tasks and create a dictionary for each task
+    for task in tasks:
+        # Create a task dictionary excluding the '_id' field
+        task_dict = {k: v for k, v in task.items() if k != '_id'}
+        
+        # Add 'type' to the task dictionary if it exists; default to 'Unknown'
+        task_dict['type'] = task_dict.get('type', 'Unknown')
+        
+        list_of_tasks.append(task_dict)
+
+    # Display the tasks as a table
+    if list_of_tasks:
+        st.table(list_of_tasks)
+    else:
+        st.write("No tasks found.")
 
 def findByTitle(title):
     tasks = collection.find({'title': f'{title}'})
     for task in tasks:
         print(task)
+
+def sortByType(type):
+    # Correctly format the query as a dictionary
+    tasks = collection.find({'type': type})
+    list_of_tasks = []
+    
+    # Loop through the tasks and create a list of dictionaries
+    for task in tasks:
+        task_dict = {k: v for k, v in task.items() if k != '_id'}  # Exclude '_id'
+        list_of_tasks.append(task_dict)
+
+    # Display the tasks as a table
+    if list_of_tasks:
+        st.table(list_of_tasks)
+    else:
+        st.write("No tasks found for this type.")
+
+    
 
 def deleteAllTasks():
     deletion = collection.delete_many({})
