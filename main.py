@@ -26,6 +26,7 @@ if __name__ == "__main__":
     db = client[db_name]
     collection = db[cl_name]
 
+    # Initializing the session stage, this is used to sequentially move through the app without rerunning/losing values
     if 'stage' not in st.session_state:
         st.session_state.stage = 0
 
@@ -34,28 +35,34 @@ if __name__ == "__main__":
 
     st.title("Task Manager")
 
-    # button to view all tasks
+    # default/home stage
     if st.session_state.stage == 0:
         st.button("View Tasks", key=1, on_click=set_stage, args=(1,))
+
+    # stage to view all tasks
     if st.session_state.stage == 1:
         readTasks()    
         st.button("Return", key=7, on_click=set_stage, args=(0,), type="secondary")
-        #st.rerun()
         st.button("Delete All", type="primary", on_click=set_stage, args=(2,))
         st.button("Sort By Type", on_click=set_stage, args=(4,))
+
+    # Stage to perform a full deletion of the collection
     if st.session_state.stage == 2:
         deleteAllTasks()
-        set_stage(1)
+        set_stage(1)  #return to stage 1
         st.rerun()
+
+    # Stage to sort by task type
     if st.session_state.stage == 4:
         type = st.selectbox("Sort by Type:", ('Work', 'Personal'))
         sortByType(type)
         st.button("Return", key=10, on_click=set_stage, args=(0,))
     
     
-    # button and form to create tasks
+    # Button and form to create tasks
     st.button("Create Task", key=2, type="secondary", on_click=set_stage, args=(3,))
     
+    # Stage to create a new task using a simple form
     if st.session_state.stage == 3:
         with st.form(key="task_form"):
             st.header("Create Task")
@@ -67,6 +74,7 @@ if __name__ == "__main__":
 
             submit_form = st.form_submit_button(label="Submit")
             
+            # Conditional to save the type of task
             if submit_form:
                 if type == 'Work':
                     task = createWorkTask(title, description, due_date)
@@ -77,5 +85,5 @@ if __name__ == "__main__":
                     collection.insert_one(task.to_dict())
                     st.success("Personal Task created!")
 
-                set_stage(1)
+                set_stage(1) # Return to the view all stage
                 st.rerun()
