@@ -74,18 +74,18 @@ def readTasks():
             list_of_tasks.append(task_dict)
 
         # Display headers at the top of the columns
-        if list_of_tasks:
-            col1, col2, col3, col4, col5 = st.columns([1,2,2,2,2])
-            with col1:
-                st.subheader("Title")
-            with col2:
-                st.subheader("Description")
-            with col3:
-                st.subheader("Due Date")
-            with col4:
-                st.subheader("Type of Task")
-            with col5:
-                st.subheader("Actions")
+        # if list_of_tasks:
+            # col1, col2, col3, col4, col5 = st.columns([1,2,2,2,2])
+            # with col1:
+            #     st.subheader("Title")
+            # with col2:
+            #     st.subheader("Description")
+            # with col3:
+            #     st.subheader("Due Date")
+            # with col4:
+            #     st.subheader("Type of Task")
+            # with col5:
+            #     st.subheader("Actions")
 
         if list_of_tasks:
             for task in list_of_tasks:
@@ -157,17 +157,17 @@ def sortByType(type):
 
     # Display headers at the top of the columns
     if list_of_tasks:
-        col1, col2, col3, col4, col5 = st.columns([1, 2, 2, 2, 2])
-        with col1:
-            st.subheader("Title")
-        with col2:
-            st.subheader("Description")
-        with col3:
-            st.subheader("Due Date")
-        with col4:
-            st.subheader("Type of Task")
-        with col5:
-            st.subheader("Actions")
+        # col1, col2, col3, col4, col5 = st.columns([1, 2, 2, 2, 2])
+        # with col1:
+        #     st.subheader("Title")
+        # with col2:
+        #     st.subheader("Description")
+        # with col3:
+        #     st.subheader("Due Date")
+        # with col4:
+        #     st.subheader("Type of Task")
+        # with col5:
+        #     st.subheader("Actions")
 
         # Display the tasks
         for task in list_of_tasks:

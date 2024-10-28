@@ -26,7 +26,7 @@ if __name__ == "__main__":
     db = client[db_name]
     collection = db[cl_name]
 
-    # Initializing the session stage, this is used to sequentially move through the app without rerunning/losing values
+    # Initializing the session stage, this is used to sequentially move through the app without rerunning and losing values
     if 'stage' not in st.session_state:
         st.session_state.stage = 0
 
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     if st.session_state.stage == 4:
         type = st.selectbox("Sort by Type:", ('Work', 'Personal'))
         sortByType(type)
-        st.button("Return", key=10, on_click=set_stage, args=(0,))
+        st.button("Return", key=10, on_click=set_stage, args=(1,))
     
     
     # Button and form to create tasks
