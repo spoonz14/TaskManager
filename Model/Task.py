@@ -42,7 +42,7 @@ def createTask(title, description, due_date):
 
 def readTasks():
     tasks = collection.find({})
-    list_of_tasks = list(tasks)
+    list_of_tasks = [{k: v for k, v in task.items() if k != '_id'} for task in tasks]
     st.table(list_of_tasks)
 
 def findByTitle(title):
@@ -50,8 +50,6 @@ def findByTitle(title):
     for task in tasks:
         print(task)
 
-
-task = createTask("Dog", "Walk dog", "10-29-2024")
-#print(task.to_dict())  
-collection.insert_one(task.to_dict())
-
+def deleteAllTasks():
+    deletion = collection.delete_many({})
+    print(deletion.deleted_count)

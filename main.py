@@ -2,7 +2,7 @@ import os
 import sys
 import streamlit as st
 sys.path.insert(0, os.path.abspath('D:\\Projects\\TaskManager\\Model'))
-from Model.Task import Task, readTasks, createTask
+from Model.Task import Task, readTasks, createTask, deleteAllTasks
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
@@ -24,26 +24,33 @@ if __name__ == "__main__":
     db = client[db_name]
     collection = db[cl_name]
 
+    if 'stage' not in st.session_state:
+        st.session_state.stage = 0
+
+    def set_stage(stage):
+        st.session_state.stage = stage
+
     st.title("Task Manager")
-    
+    st.write(st.session_state)
+
     # button to view all tasks
-    if st.button("View Tasks", key=1):
-        if st.button("Return", key=7, type="primary"):
-            st.rerun()
-        readTasks()     
+    if st.session_state.stage == 0:
+        st.button("View Tasks", key=1, on_click=set_stage, args=(1,))
+    if st.session_state.stage == 1:
+        readTasks()    
+        st.button("Return", key=7, on_click=set_stage, args=(0,))
+        #st.rerun()
+        st.button("Delete All", type="primary", on_click=set_stage, args=(2,))
+    if st.session_state.stage == 2:
+        deleteAllTasks()
+        set_stage(1)
+        st.rerun()
     
-    # Initializing some session states
-    formbtn = st.button("Create Task")
-
-    if "formbtn" not in st.session_state:
-        st.session_state.formbtn_state = False
-
-    if formbtn or st.session_state.formbtn_state:
-        st.session_state.formbtn_state = True
-
-        st.subheader("Task Creation")
+    
     # button and form to create tasks
-    #if st.button("Create Task", key=2, type="secondary"):
+    st.button("Create Task", key=2, type="secondary", on_click=set_stage, args=(3,))
+    
+    if st.session_state.stage == 3:
         with st.form(key="task_form"):
             st.header("Create Task")
 
@@ -61,4 +68,5 @@ if __name__ == "__main__":
                 st.session_state["title_input"] = ""
                 st.session_state["desc_input"] = ""
                 st.session_state["due_date_input"] = ""
-                st.experimental_rerun()
+                set_stage(1)
+                st.rerun()
