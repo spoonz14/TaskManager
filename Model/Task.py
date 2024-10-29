@@ -89,30 +89,32 @@ def readTasks():
 
         if list_of_tasks:
             for task in list_of_tasks:
-                col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 2, 2])
-                
-                # Use unique keys for each input field
-                with col1:
-                    title = st.text_input("Title", value=task['title'], key=f"title_{task['_id']}", on_change=update_task, args=(task['_id'], 'title'))
-                
-                with col2:
-                    description = st.text_input("Description", value=task['description'], key=f"description_{task['_id']}", on_change=update_task, args=(task['_id'], 'description'))
-                
-                with col3:
-                    due_date = st.text_input("Due Date", value=task['due_date'], key=f"due_date_{task['_id']}", on_change=update_task, args=(task['_id'], 'due_date'))
-                
-                with col4:
-                    task_type = st.selectbox("Type", ['Work', 'Personal'], key=f"selectbox_{task['_id']}", index=['Work', 'Personal'].index(task['type']), on_change=update_task, args=(task['_id'], 'type'))
-                
-                with col5:
-                    # Trying to format the button a bit
-                    st.empty()
-                    st.write('')
-                    st.write('')
-                    if st.button("Delete", key=f"delete_{task['_id']}", type="primary"):
-                        collection.delete_one({'_id': ObjectId(task['_id'])})
-                        st.success(f"Task '{task['title']}' deleted!")
-                        st.rerun()  
+
+                with st.container():
+                    col1, col2, col3, col4, col5 = st.columns([2, 4, 2, 2, 2])
+                    
+                    # Use unique keys for each input field
+                    with col1:
+                        title = st.text_input("Title", value=task['title'], key=f"title_{task['_id']}", on_change=update_task, args=(task['_id'], 'title'))
+                    
+                    with col2:
+                        description = st.text_input("Description", value=task['description'], key=f"description_{task['_id']}", on_change=update_task, args=(task['_id'], 'description'))
+                    
+                    with col3:
+                        due_date = st.text_input("Due Date", value=task['due_date'], key=f"due_date_{task['_id']}", on_change=update_task, args=(task['_id'], 'due_date'))
+                    
+                    with col4:
+                        task_type = st.selectbox("Type", ['Work', 'Personal'], key=f"selectbox_{task['_id']}", index=['Work', 'Personal'].index(task['type']), on_change=update_task, args=(task['_id'], 'type'))
+                    
+                    with col5:
+                        # Trying to format the button a bit
+                        st.empty()
+                        st.write('')
+                        st.write('')
+                        if st.button("Delete", key=f"delete_{task['_id']}", type="primary"):
+                            collection.delete_one({'_id': ObjectId(task['_id'])})
+                            st.success(f"Task '{task['title']}' deleted!")
+                            st.rerun()  
 
 def update_task(task_id, field):
     """Update the task in the database when text input changes."""

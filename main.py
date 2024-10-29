@@ -33,6 +33,8 @@ if __name__ == "__main__":
     def set_stage(stage):
         st.session_state.stage = stage
 
+    st.set_page_config(layout="wide")
+
     st.title("Task Manager")
 
     # default/home stage
@@ -41,10 +43,21 @@ if __name__ == "__main__":
 
     # stage to view all tasks
     if st.session_state.stage == 1:
-        readTasks()    
-        st.button("Return", key=7, on_click=set_stage, args=(0,), type="secondary")
-        st.button("Delete All", type="primary", on_click=set_stage, args=(2,))
-        st.button("Sort By Type", on_click=set_stage, args=(4,))
+        readTasks()
+        with st.container():
+            col1, col2, col3, col4 = st.columns([1,1,1,8])
+            # Adjusting spacing with markdown
+            #st.markdown("<style>div.stButton {margin: 0 5px;}</style>", unsafe_allow_html=True)
+            # Placing the buttons in a row
+            with col1:   
+                st.button("Return", key=7, on_click=set_stage, args=(0,), type="secondary")
+            with col2:
+                st.button("Delete All", type="primary", on_click=set_stage, args=(2,))
+            with col3:
+                st.button("Sort By Type", on_click=set_stage, args=(4,))
+            # Attempting to format the buttons
+            with col4:
+                st.write("")
 
     # Stage to perform a full deletion of the collection
     if st.session_state.stage == 2:
@@ -64,6 +77,7 @@ if __name__ == "__main__":
     
     # Stage to create a new task using a simple form
     if st.session_state.stage == 3:
+        st.button("Return", key=30, on_click=set_stage, args=(0,), type="secondary")
         with st.form(key="task_form"):
             st.header("Create Task")
 
