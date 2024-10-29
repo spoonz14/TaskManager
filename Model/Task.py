@@ -47,13 +47,15 @@ def createTask(title, description, due_date):
     task = Task(title, description, due_date)
     return task
 
+def set_task_stage(task_stage):
+    st.session_state.task_stage = task_stage
+
 def readTasks():
     # Initializing the session stage for tasks, this is used to sequentially move through the app without rerunning and losing values
     if 'task_stage' not in st.session_state:
         st.session_state.task_stage = 0
 
-    def set_task_stage(task_stage):
-        st.session_state.task_stage = task_stage
+    
         
     tasks = collection.find({})
     list_of_tasks = []
@@ -73,25 +75,12 @@ def readTasks():
             
             list_of_tasks.append(task_dict)
 
-        # Display headers at the top of the columns
-        # if list_of_tasks:
-            # col1, col2, col3, col4, col5 = st.columns([1,2,2,2,2])
-            # with col1:
-            #     st.subheader("Title")
-            # with col2:
-            #     st.subheader("Description")
-            # with col3:
-            #     st.subheader("Due Date")
-            # with col4:
-            #     st.subheader("Type of Task")
-            # with col5:
-            #     st.subheader("Actions")
 
         if list_of_tasks:
             for task in list_of_tasks:
 
                 with st.container():
-                    col1, col2, col3, col4, col5 = st.columns([2, 4, 2, 2, 2])
+                    col1, col2, col3, col4, col5 = st.columns([2, 5, 2, 2, 1])
                     
                     # Use unique keys for each input field
                     with col1:
@@ -127,19 +116,30 @@ def update_task(task_id, field):
     # Update the database with the new values
     update_fields = {}
     if field == 'title':
-        update_fields['title'] = current_title
+        if current_title.strip():
+            update_fields['title'] = current_title
+        else:
+            st.write("Please enter a title.")
+            set_task_stage(0)
     elif field == 'description':
-        update_fields['description'] = current_description
+        if current_description.strip():
+            update_fields['description'] = current_description
+        else:
+            st.write("Please enter a description.")
+            set_task_stage(0)
     elif field == 'due_date':
-        update_fields['due_date'] = current_due_date
-    elif field == 'type':
+        if current_due_date.strip():
+            update_fields['due_date'] = current_due_date
+        else:
+            st.write("Please enter a due date")
+            set_task_stage(0)
+    elif field == 'type' and current_type.strip():
         update_fields['type'] = current_type
 
     # Perform the update in the database
     if update_fields:
         collection.update_one({'_id': ObjectId(task_id)}, {'$set': update_fields})
-        st.success("Task updated!")
-            
+        st.success("Task updated!")     
 
 def findByTitle(title):
     tasks = collection.find({'title': f'{title}'})
@@ -159,21 +159,9 @@ def sortByType(type):
 
     # Display headers at the top of the columns
     if list_of_tasks:
-        # col1, col2, col3, col4, col5 = st.columns([1, 2, 2, 2, 2])
-        # with col1:
-        #     st.subheader("Title")
-        # with col2:
-        #     st.subheader("Description")
-        # with col3:
-        #     st.subheader("Due Date")
-        # with col4:
-        #     st.subheader("Type of Task")
-        # with col5:
-        #     st.subheader("Actions")
-
         # Display the tasks
         for task in list_of_tasks:
-            col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 2, 2])
+            col1, col2, col3, col4, col5 = st.columns([2, 5, 2, 2, 1])
             
             # Use unique keys for each input field
             with col1:
@@ -197,11 +185,7 @@ def sortByType(type):
                     st.success(f"Task '{task['title']}' deleted!")
                     st.experimental_rerun() 
     else:
-        st.write("No tasks found for this type.")
-
-
-
-    
+        st.write("No tasks found for this type.")   
 
 def deleteAllTasks():
     deletion = collection.delete_many({})

@@ -92,12 +92,23 @@ if __name__ == "__main__":
             if submit_form:
                 if type == 'Work':
                     task = createWorkTask(title, description, due_date)
-                    collection.insert_one(task.to_dict())
-                    st.success("Work Task created!")
+                    if title.strip() and description.strip() and due_date.strip():
+                        collection.insert_one(task.to_dict())
+                        st.success("Task created!")
+                        if st.success:
+                            set_stage(1) # Return to the view all stage
+                            st.rerun()
+                    else:
+                        st.write("Please Fill All fields.")
                 elif type == 'Personal':
                     task = createPersonalTask(title, description, due_date)
-                    collection.insert_one(task.to_dict())
-                    st.success("Personal Task created!")
+                    if title.strip() and description.strip() and due_date.strip():
+                        collection.insert_one(task.to_dict())
+                        st.success("Task created!")
+                        if st.success:
+                            set_stage(1) # Return to the view all stage
+                            st.rerun()
+                    else:
+                        st.write("Please Fill All fields.")
 
-                set_stage(1) # Return to the view all stage
-                st.rerun()
+                
