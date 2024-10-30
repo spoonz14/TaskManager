@@ -1,0 +1,8 @@
+# Requirements for the Python II Midterm Project
+
+Streamlit
+
+python-dotenv
+
+pymongo
+
